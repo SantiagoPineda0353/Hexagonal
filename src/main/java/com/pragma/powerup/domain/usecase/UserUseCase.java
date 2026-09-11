@@ -8,15 +8,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.regex.Pattern;
 
 public class UserUseCase implements IUserServicePort {
 
-    private static final int idRol=2;
-    private static final int minAge=18;
+    private static final int ID_ROL=2;
+    private static final int MIN_AGE=18;
+    private static final ZoneId ZONE_ID= ZoneId.of("America/Bogota");
     private static final Pattern emainPattern= Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
-    private static final Pattern cellphonePattern = Pattern.compile("^\\+?[0-9]{1,13}$");
-    private static final Pattern documentPattern=Pattern.compile("^[0-9]+$");
+    private static final Pattern cellphonePattern = Pattern.compile("^\\+?\\d{1,13}$");
+    private static final Pattern documentPattern=Pattern.compile("^\\d+$");
 
     private final IUserPersistencePort userPersistencePort;
     private final PasswordEncoder passwordEncoder;
@@ -36,7 +38,7 @@ public class UserUseCase implements IUserServicePort {
         if(userPersistencePort.existsByEmail(userModel.getEmail())){
             throw new InvalidEmailDuplicate();
         }
-        userModel.setIdRole(idRol);
+        userModel.setIdRole(ID_ROL);
         userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
         userPersistencePort.saveUser(userModel);
     }
@@ -48,7 +50,7 @@ public class UserUseCase implements IUserServicePort {
     }
 
     private void validateAge(LocalDate birthDate){
-        if (birthDate==null || Period.between(birthDate,LocalDate.now()).getYears() < minAge){
+        if (birthDate==null || Period.between(birthDate,LocalDate.now(ZONE_ID)).getYears() < MIN_AGE){
             throw new InvalidUserAgeException();
         }
     }
