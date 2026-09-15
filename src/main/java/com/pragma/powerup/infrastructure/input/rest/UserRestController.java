@@ -1,6 +1,7 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
 import com.pragma.powerup.application.dto.request.SaveUserRequestDto;
+import com.pragma.powerup.application.dto.response.UserResponseDto;
 import com.pragma.powerup.application.handler.IUserHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,5 +29,10 @@ public class UserRestController {
     public ResponseEntity<Void> saveOwner(@RequestBody SaveUserRequestDto saveUserRequestDto) {
         userHandler.saveOwner(saveUserRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id){
+        return ResponseEntity.ok(userHandler.getUserById(id));
     }
 }
