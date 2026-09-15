@@ -29,6 +29,11 @@ public class UserUseCase implements IUserServicePort {
     }
 
     @Override
+    public UserModel getUserById(Long id) {
+        return userPersistencePort.getUserById(id);
+    }
+
+    @Override
     public void saveOwer(UserModel userModel) {
         validateEmail(userModel.getEmail());
         validateAge(userModel.getBirthDate());

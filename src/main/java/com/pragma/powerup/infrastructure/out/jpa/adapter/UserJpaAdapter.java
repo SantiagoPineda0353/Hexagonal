@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.out.jpa.adapter;
 
+import com.pragma.powerup.domain.exception.UserNotFoundException;
 import com.pragma.powerup.domain.model.UserModel;
 import com.pragma.powerup.domain.spi.IUserPersistencePort;
 import com.pragma.powerup.infrastructure.out.jpa.entity.UserEntity;
@@ -25,4 +26,10 @@ public class UserJpaAdapter implements IUserPersistencePort {
        return userRepository.existsByEmail(email);
     }
 
+    @Override
+    public UserModel getUserById(Long id) {
+        return userRepository.findById(id)
+                .map(userEntityMapper::toModel)
+                .orElseThrow(UserNotFoundException::new);
+    }
 }
